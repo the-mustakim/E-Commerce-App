@@ -1,0 +1,27 @@
+
+spring:
+  application:
+    name: ecom-application
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecomapp?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: Mustakim@123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000 # 30 sec
+      max-lifetime: 1800000 # 30 min
+      connection-timeout: 20000 # 20 sec
+      pool-name: MyHikariCP
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8080
