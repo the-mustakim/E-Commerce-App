@@ -26,15 +26,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     @Override
     public UserResponse addUser(UserDto userDto) {
-        User user = new User();
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        user.setPhone(userDto.getPhone());
-        user.setUserRole(userDto.getUserRole());
-        user.setAddress(mapToAddress(userDto.getAddress()));
-        User newUser = userRepo.saveAndFlush(user);
-        return mapToUserResponse(newUser);
+        return mapToUserResponse(userRepo.saveAndFlush(mapToUser(userDto)));
     }
 
     @Override
@@ -50,6 +42,7 @@ public class UserServiceImpl implements UserService{
         throw new NotFoundException("No user present with the given ID: " + userId);
     }
 
+    @Transactional
     @Override
     public UserResponse updateUser(Long userId, UserDto userDto) {
         Optional<User> user = userRepo.findById(userId);
@@ -58,6 +51,17 @@ public class UserServiceImpl implements UserService{
         user.get().setLastName(userDto.getLastName());
         userRepo.saveAndFlush(user.get());
         return new UserResponse(String.valueOf(user.get().getId()), user.get().getFirstName(),user.get().getLastName(),user.get().getEmail(),user.get().getPhone(),user.get().getUserRole());
+    }
+
+    public static User mapToUser(UserDto userDto){
+        User user = new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        user.setPhone(userDto.getPhone());
+        user.setUserRole(userDto.getUserRole());
+        user.setAddress(mapToAddress(userDto.getAddress()));
+        return user;
     }
 
     public static UserResponse mapToUserResponse(User user){
@@ -71,4 +75,6 @@ public class UserServiceImpl implements UserService{
     public static Address mapToAddress(AddressDto addressDto){
         return new Address(addressDto.getState(),addressDto.getCity(),addressDto.getState(),addressDto.getCountry(),addressDto.getZipcode());
     }
+
+
 }
