@@ -31,7 +31,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-    @GetMapping("{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<UserResponse> getUser(@PathVariable Long userId){
         UserResponse user = userService.getUser(userId);
         return ResponseEntity.status(HttpStatus.OK).body(user);
