@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.mysql.MySQLContainer;
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -28,8 +28,7 @@ class UserControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Container
     @ServiceConnection
@@ -67,21 +66,17 @@ class UserControllerIT {
         userDto.setEmail("john@gmail.com");
         userDto.setAddress(addressDto);
 
-        try {
-            mockMvc.perform(
-                            post("/api/user")
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(objectMapper.writeValueAsBytes(userDto)))
-                    .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.firstName").value("John"))
-                    .andExpect(jsonPath("$.email").value("john@gmail.com"));
-        }catch (Exception exception){
-            System.out.println(exception.getMessage());
-        }
+        mockMvc.perform(
+                        post("/api/user")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsBytes(userDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstName").value("John"))
+                .andExpect(jsonPath("$.email").value("john@gmail.com"));
     }
 
     @Test
-    void testGetUser(){
+    void testGetUser() throws Exception{
 
         AddressDto addressDto = new AddressDto(
                 "Abbey Street",
@@ -96,26 +91,22 @@ class UserControllerIT {
         userDto.setAddress(addressDto);
 
         long userId = 1L;
-        try {
-
             //Create the User First
-            mockMvc.perform(
-                            post("/api/user")
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(objectMapper.writeValueAsBytes(userDto)))
-                    .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.firstName").value("John"))
-                    .andExpect(jsonPath("$.email").value("john@gmail.com"));
+        mockMvc.perform(
+                        post("/api/user")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsBytes(userDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstName").value("John"))
+                .andExpect(jsonPath("$.email").value("john@gmail.com"));
 
-            //Try getting the same user
-            mockMvc.perform(get("/api/user/"+userId)).andExpect(status().isOk()).andExpect(jsonPath("$.email").value("john@gmail.com"));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        //Try getting the same user
+        mockMvc.perform(get("/api/user/"+userId)).andExpect(status().isOk()).andExpect(jsonPath("$.email").value("john@gmail.com"));
+
     }
 
     @Test
-    void testupdateUser(){
+    void testupdateUser() throws Exception{
         AddressDto addressDto = new AddressDto(
                 "Abbey Street",
                 "Dublin",
@@ -135,8 +126,6 @@ class UserControllerIT {
         updateUserDto.setLastName("Khan");
         updateUserDto.setEmail("salman@gmail.com");
 
-        try {
-
             //Create the user
             String contentAsString = mockMvc.perform(post("/api/user").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(userDto))).andExpect(status().isCreated()).andExpect(jsonPath("$.email").value("john@gmail.com")).andReturn().getResponse().getContentAsString();
 
@@ -144,10 +133,6 @@ class UserControllerIT {
 
             //Update the firstName and LastName
             mockMvc.perform(put("/api/user/"+userResponse.getId()).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(updateUserDto))).andExpect(status().isOk()).andExpect(jsonPath("$.firstName").value("Salman")).andExpect(jsonPath("$.lastName").value("Khan"));
-
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
 
     }
 

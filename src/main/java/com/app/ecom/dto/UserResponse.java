@@ -1,10 +1,7 @@
 package com.app.ecom.dto;
 
 import com.app.ecom.enums.UserRole;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
