@@ -9,7 +9,6 @@ import com.app.ecom.repository.OrderRepository;
 import com.app.ecom.repository.UserRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
