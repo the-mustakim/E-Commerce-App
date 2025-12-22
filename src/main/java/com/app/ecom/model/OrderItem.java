@@ -25,4 +25,11 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false, referencedColumnName = "id")
     private Order order;
+
+    public OrderItem(Product product, Integer quantity, BigDecimal price, Order order) {
+        this.product = product;
+        this.quantity = quantity;
+        this.price = price;
+        this.order = order;
+    }
 }

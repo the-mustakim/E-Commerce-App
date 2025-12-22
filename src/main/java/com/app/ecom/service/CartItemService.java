@@ -2,6 +2,7 @@ package com.app.ecom.service;
 
 import com.app.ecom.dto.CartItemRequest;
 import com.app.ecom.dto.CartItemResponse;
+import com.app.ecom.model.CartItem;
 
 import java.util.List;
 
@@ -11,4 +12,8 @@ public interface CartItemService {
     void deleteCart(String userId, Long productId);
 
     List<CartItemResponse> getAllCartItem(Long userId);
+
+    List<CartItem> getCartItems(Long userId);
+
+    void clear(String userId);
 }

@@ -77,11 +77,22 @@ public class CartItemServiceImpl implements CartItemService{
 
     }
 
-
     @Override
     public List<CartItemResponse> getAllCartItem(Long userId) {
         Optional<User> userOpt = userRepo.findById(userId);
         if(userOpt.isEmpty()){throw new NotFoundException("User not found with Id: "+userId);}
         return cartItemRepo.findByUser(userOpt.get()).stream().map(cartItem -> new CartItemResponse(cartItem.getId(),cartItem.getQuantity())).toList();
+    }
+
+    @Override
+    public List<CartItem> getCartItems(Long userId) {
+        Optional<User> userOpt = userRepo.findById(userId);
+        if(userOpt.isEmpty()){throw new NotFoundException("User not found with Id: "+userId);}
+        return cartItemRepo.findByUser(userOpt.get()).stream().map(cartItem -> new CartItem(cartItem.getId(), cartItem.getUser(),cartItem.getProduct(),cartItem.getQuantity(),cartItem.getPrice(),cartItem.getCreatedAt(),cartItem.getUpdatedAt())).toList();
+    }
+
+    @Override
+    public void clear(String userId) {
+        userRepo.findById(Long.valueOf(userId)).ifPresent(cartItemRepo::deleteByUser);
     }
 }
